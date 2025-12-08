@@ -1,0 +1,6 @@
+CREATE TABLE supplier (
+    id BIGSERIAL PRIMARY KEY,
+    email VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    cep VARCHAR(20) NOT NULL
+)
