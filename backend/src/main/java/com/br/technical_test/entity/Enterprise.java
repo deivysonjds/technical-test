@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,4 +23,6 @@ public class Enterprise {
     @Column(nullable = false)
     private String cnpj;
 
+    @OneToMany(mappedBy = "enterprise")
+    private List<EnterpriseSupplier> suppliers;
 }
