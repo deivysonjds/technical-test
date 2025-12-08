@@ -1,0 +1,6 @@
+CREATE TABLE enterprise (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    cep VARCHAR(10) NOT NULL,
+    cnpj VARCHAR(18) NOT NULL
+)
