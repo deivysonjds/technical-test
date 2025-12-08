@@ -1,7 +1,7 @@
 CREATE TABLE supplier_pf (
     id BIGINT PRIMARY KEY,
     cpf VARCHAR(14) NOT NULL UNIQUE,
-    rg VARCHAR(20) NOT NULL,
+    rg VARCHAR(20) NOT NULL UNIQUE,
     birth_date DATE NOT NULL,
 
     CONSTRAINT fk_supplier_pf
