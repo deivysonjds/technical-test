@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,5 +25,5 @@ public class Enterprise {
     private String cnpj;
 
     @OneToMany(mappedBy = "enterprise")
-    private List<EnterpriseSupplier> suppliers;
+    private List<EnterpriseSupplier> suppliers = new ArrayList<EnterpriseSupplier>();
 }
