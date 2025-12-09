@@ -2,6 +2,7 @@ package com.br.technical_test.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "supplier_pf")
 public class SupplierPF extends Supplier {
 
     @Column(nullable = false, unique = true)
