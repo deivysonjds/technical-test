@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,13 +26,16 @@ public class EnterpriseService {
     @Transactional
     public EnterpriseResponse insert(EnterpriseRequest enterpriseRequest){
         Enterprise enterprise = enterpriseMapper.toEntity(enterpriseRequest);
+        System.out.println(">>> service name = " + enterprise.getName());
+        System.out.println(">>> cep = " + enterprise.getCep());
+        System.out.println(">>> cnpj = " + enterprise.getCnpj());
         enterprise = enterpriseRepository.save(enterprise);
-        return enterpriseMapper.toDto(enterprise);
+        return enterpriseMapper.toResponse(enterprise);
     }
 
     @Transactional(readOnly = true)
     public Page<EnterpriseResponse> findAll(Pageable pageable){
-        return enterpriseRepository.findAll(pageable).map(enterpriseMapper::toDto);
+        return enterpriseRepository.findAll(pageable).map(enterpriseMapper::toResponse);
     }
 
     @Transactional(readOnly = true)
@@ -41,7 +43,7 @@ public class EnterpriseService {
         Optional<Enterprise> enterprise = enterpriseRepository.findById(id);
         if (enterprise.isEmpty()) throw new NoSuchResource("enterprise");
 
-        return enterpriseMapper.toDto(enterprise.get());
+        return enterpriseMapper.toResponse(enterprise.get());
     }
 
     @Transactional(readOnly = true)
@@ -49,7 +51,7 @@ public class EnterpriseService {
         Optional<Enterprise> enterprise = enterpriseRepository.findByCnpj(cnpj);
         if (enterprise.isEmpty()) throw new NoSuchResource("enterprise");
 
-        return enterpriseMapper.toDto(enterprise.get());
+        return enterpriseMapper.toResponse(enterprise.get());
     }
 
     @Transactional
@@ -60,7 +62,7 @@ public class EnterpriseService {
         enterprise.setId(id);
         enterprise = enterpriseRepository.save(enterprise);
 
-        return enterpriseMapper.toDto(enterprise);
+        return enterpriseMapper.toResponse(enterprise);
     }
 
     @Transactional
