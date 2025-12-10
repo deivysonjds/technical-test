@@ -1,5 +1,5 @@
 CREATE TABLE enterprise_supplier (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     enterprise_id BIGINT NOT NULL,
     supplier_id BIGINT NOT NULL,
     status VARCHAR(255) NOT NULL,
