@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface EnterpriseMapper {
-    EnterpriseResponse toDto(Enterprise enterprise);
+    EnterpriseResponse toResponse(Enterprise enterprise);
     Enterprise toEntity(EnterpriseRequest enterpriseRequest);
     List<EnterpriseResponse> toDtoList(List<Enterprise> enterprises);
 }
