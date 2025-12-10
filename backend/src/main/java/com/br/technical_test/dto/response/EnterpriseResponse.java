@@ -1,6 +1,5 @@
 package com.br.technical_test.dto.response;
 
-import com.br.technical_test.entity.Enterprise;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
