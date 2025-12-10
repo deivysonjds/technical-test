@@ -2,13 +2,13 @@ package com.br.technical_test.controller;
 
 import com.br.technical_test.dto.request.EnterpriseRequest;
 import com.br.technical_test.dto.response.EnterpriseResponse;
-import com.br.technical_test.entity.Enterprise;
 import com.br.technical_test.exception.NoSuchResource;
 import com.br.technical_test.service.EnterpriseService;
-import org.mapstruct.ap.shaded.freemarker.core.ReturnInstruction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,6 +23,7 @@ public class EnterpriseControllers {
 
     @PostMapping("/")
     public ResponseEntity<EnterpriseResponse> insert(@RequestBody EnterpriseRequest enterpriseRequest){
+
         try{
             EnterpriseResponse enterpriseResponse = enterpriseService.insert(enterpriseRequest);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(enterpriseResponse.getId())
@@ -34,8 +35,11 @@ public class EnterpriseControllers {
     }
 
     @GetMapping("/")
-    public Page<EnterpriseResponse> findAll(@RequestParam(required = true, defaultValue = "1") Pageable pageable){
-        return enterpriseService.findAll(pageable);
+    public ResponseEntity<Page<EnterpriseResponse>> findAll(
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+
+        Page<EnterpriseResponse> page = enterpriseService.findAll(pageable);
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
