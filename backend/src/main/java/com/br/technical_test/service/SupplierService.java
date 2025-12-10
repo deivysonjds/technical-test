@@ -13,6 +13,8 @@ import com.br.technical_test.mapper.SupplierMapper;
 import com.br.technical_test.repository.SupplierPfRepository;
 import com.br.technical_test.repository.SupplierPjRepository;
 import com.br.technical_test.repository.SupplierRepository;
+import com.br.technical_test.validation.CepValidation;
+import com.br.technical_test.validation.DocumentValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,12 +39,14 @@ public class SupplierService {
     @Transactional
     public SupplierPJResponse insertPj(SupplierPJRequest supplierPjRequest){
         SupplierPJ supplier = supplierMapper.toPJEntity(supplierPjRequest);
+        if (!DocumentValidation.isCnpj(supplier.getCnpj()) || !CepValidation.isCep(supplier.getCep())) throw new IllegalArgumentException("Cnpj or Cep invalid");
         supplier = supplierPjRepository.save(supplier);
         return supplierMapper.toPJResponse(supplier);
     }
 
     public SupplierPFResponse insertPf(SupplierPFRequest supplierPfRequest){
         SupplierPF supplier = supplierMapper.toPFEntity(supplierPfRequest);
+        if (!DocumentValidation.isCpf(supplier.getCpf()) || !DocumentValidation.isRg(supplier.getRg())|| !CepValidation.isCep(supplier.getCep())) throw new IllegalArgumentException("Cnpj, Rg or Cep invalid");
         supplier = supplierPfRepository.save(supplier);
         return supplierMapper.toPFResponse(supplier);
     }

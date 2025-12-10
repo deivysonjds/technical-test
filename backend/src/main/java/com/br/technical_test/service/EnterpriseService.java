@@ -6,6 +6,8 @@ import com.br.technical_test.entity.Enterprise;
 import com.br.technical_test.exception.NoSuchResource;
 import com.br.technical_test.mapper.EnterpriseMapper;
 import com.br.technical_test.repository.EnterpriseRepository;
+import com.br.technical_test.validation.CepValidation;
+import com.br.technical_test.validation.DocumentValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,9 +28,8 @@ public class EnterpriseService {
     @Transactional
     public EnterpriseResponse insert(EnterpriseRequest enterpriseRequest){
         Enterprise enterprise = enterpriseMapper.toEntity(enterpriseRequest);
-        System.out.println(">>> service name = " + enterprise.getName());
-        System.out.println(">>> cep = " + enterprise.getCep());
-        System.out.println(">>> cnpj = " + enterprise.getCnpj());
+        if (!DocumentValidation.isCnpj(enterprise.getCnpj()) || !CepValidation.isCep(enterprise.getCep())) throw new IllegalArgumentException("Cnpj or Cep invalid");
+
         enterprise = enterpriseRepository.save(enterprise);
         return enterpriseMapper.toResponse(enterprise);
     }

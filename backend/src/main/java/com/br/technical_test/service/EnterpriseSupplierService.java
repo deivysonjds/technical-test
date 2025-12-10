@@ -1,13 +1,19 @@
 package com.br.technical_test.service;
 
+import com.br.technical_test.dto.request.EnterpriseSupplierRequest;
 import com.br.technical_test.dto.response.EnterpriseSupplierResponse;
+import com.br.technical_test.dto.response.SupplierResponse;
 import com.br.technical_test.entity.Enterprise;
 import com.br.technical_test.entity.EnterpriseSupplier;
 import com.br.technical_test.entity.Supplier;
+import com.br.technical_test.entity.SupplierPF;
 import com.br.technical_test.exception.NoSuchResource;
 import com.br.technical_test.repository.EnterpriseRepository;
 import com.br.technical_test.repository.EnterpriseSupplierRepository;
+import com.br.technical_test.repository.SupplierPfRepository;
 import com.br.technical_test.repository.SupplierRepository;
+import com.br.technical_test.validation.AgeValidation;
+import com.br.technical_test.validation.CepValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +28,29 @@ public class EnterpriseSupplierService {
     private SupplierRepository supplierRepository;
     @Autowired
     private EnterpriseRepository enterpriseRepository;
+    @Autowired
+    private SupplierPfRepository supplierPfRepository;
+    @Autowired
+    private CepService cepService;
 
     @Transactional
-    public EnterpriseSupplierResponse associate(Long enterpriseId, Long supplierId){
-        boolean associationAlreadyExists = enterpriseSupplierRepository.existsByEnterpriseIdAndSupplierId(enterpriseId, supplierId);
+    public EnterpriseSupplierResponse associate(EnterpriseSupplierRequest enterpriseSupplierRequest){
+        boolean associationAlreadyExists = enterpriseSupplierRepository.existsByEnterpriseIdAndSupplierId(enterpriseSupplierRequest.getEnterpriseId(), enterpriseSupplierRequest.getSupplierId());
         if (associationAlreadyExists) throw new IllegalArgumentException("Association already exists");
 
-        EnterpriseSupplier enterpriseSupplier = toEntity(enterpriseId, supplierId);
+        EnterpriseSupplier enterpriseSupplier = toEntity(enterpriseSupplierRequest.getEnterpriseId(), enterpriseSupplierRequest.getSupplierId());
+        String uf = enterpriseSupplier.getEnterprise().getCep();
+
+        boolean isParana = CepValidation.isParana(cepService.findCep(uf));
+        boolean isPF = enterpriseSupplier.getSupplier() instanceof SupplierPF;
+        if (isParana & isPF){
+            Optional<SupplierPF> supplierPF = supplierPfRepository.findById(enterpriseSupplier.getSupplier().getId());
+            if (supplierPF.isEmpty()) throw new NoSuchResource("supplier");
+
+            if (!AgeValidation.isLegalAge(supplierPF.get().getBirthDate())) throw new IllegalArgumentException("Age invalid");
+        }
+
+
         return toResponse(enterpriseSupplierRepository.save(enterpriseSupplier));
     }
 
