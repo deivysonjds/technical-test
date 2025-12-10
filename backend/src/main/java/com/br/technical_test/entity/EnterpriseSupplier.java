@@ -1,6 +1,7 @@
 package com.br.technical_test.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "enterprise_supplier")
 public class EnterpriseSupplier {
 
@@ -24,4 +26,9 @@ public class EnterpriseSupplier {
     @Enumerated(EnumType.STRING)
     private StatusContract status;
 
+    public EnterpriseSupplier(Enterprise enterprise, Supplier supplier){
+        this.enterprise = enterprise;
+        this.supplier = supplier;
+        status = StatusContract.ACTIVE;
+    }
 }
