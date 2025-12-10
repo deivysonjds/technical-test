@@ -25,6 +25,6 @@ public abstract class Supplier {
     @Column(nullable = false)
     private String cep;
 
-    @OneToMany(mappedBy = "supplier")
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
     private List<EnterpriseSupplier> enterprises;
 }

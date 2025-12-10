@@ -23,9 +23,9 @@ public class Enterprise {
     private String name;
     @Column(nullable = false)
     private String cep;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String cnpj;
 
-    @OneToMany(mappedBy = "enterprise")
+    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
     private List<EnterpriseSupplier> suppliers = new ArrayList<EnterpriseSupplier>();
 }
