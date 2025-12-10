@@ -47,8 +47,11 @@ public class SupplierControllers {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Page<SupplierResponse>> findAll(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
-        return ResponseEntity.ok(supplierService.findAll(pageable));
+    public ResponseEntity<Page<SupplierResponse>> findAll(
+            @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String document){
+        return ResponseEntity.ok(supplierService.findAll(name, document, pageable));
     }
 
     @GetMapping("/{id}")
@@ -61,11 +64,6 @@ public class SupplierControllers {
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    @GetMapping("/")
-    public ResponseEntity<SupplierResponse> findByDocument(@RequestParam(required = true)){
-
     }
 
     @DeleteMapping("/{id}")

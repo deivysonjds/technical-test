@@ -48,8 +48,8 @@ public class SupplierService {
     }
 
     @Transactional(readOnly = true)
-    public Page<SupplierResponse> findAll(Pageable pageable){
-        return supplierRepository.findAll(pageable).map(supplierMapper::toResponse);
+    public Page<SupplierResponse> findAll(String name, String document,Pageable pageable){
+        return supplierRepository.findByFilters(name, document, pageable).map(supplierMapper::toResponse);
     }
 
     @Transactional(readOnly = true)
