@@ -1,14 +1,16 @@
-import { enterpriseRequest, enterpriseResponse } from "@/types/enterprise";
+import { EnterpriseFormData, enterpriseResponse } from "@/types/enterprise";
 import api from "./api";
+import { Page } from "@/types/page";
 
 const enterpriseService = {
-    getAll: async (): Promise<enterpriseResponse[]>=>{
-        let response = await api.get<enterpriseResponse[]>('/enterprises/')
+    getAll: async (): Promise<Page<enterpriseResponse>>=>{
+        let response = await api.get<Page<enterpriseResponse>>('/enterprises/')
         return response.data
     },
 
-    insert: async(enterprise: enterpriseRequest): Promise<enterpriseResponse>=>{
-        let response = await api.post('/enterprises/', {enterprise})
+    insert: async(enterprise: EnterpriseFormData): Promise<enterpriseResponse>=>{
+        let response = await api.post('/enterprises/',enterprise)
+        
         return response.data
     }
 }
