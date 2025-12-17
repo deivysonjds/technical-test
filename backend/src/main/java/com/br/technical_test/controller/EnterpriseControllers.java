@@ -30,6 +30,7 @@ public class EnterpriseControllers {
                     .toUri();
             return ResponseEntity.created(uri).body(enterpriseResponse);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
