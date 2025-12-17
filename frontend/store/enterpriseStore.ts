@@ -11,6 +11,6 @@ export const useEnterprisesStore = create<EnterpriseStore>((set) => ({
 
   setAll: (enterprises) =>
     set({
-      enterprises,
+      enterprises:enterprises
     }),
 }))
