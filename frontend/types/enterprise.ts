@@ -1,3 +1,4 @@
+import { z } from "zod"
 
 
 export interface enterpriseResponse {
@@ -6,9 +7,21 @@ export interface enterpriseResponse {
     cep: string,
     name: string
 }
+export const enterpriseSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Nome é obrigatório"),
 
-export interface enterpriseRequest {
-    cnpj: string,
-    cep: string,
-    name: string
-}
+  cep: z
+    .string()
+    .regex(/^\d{8}$/, "CEP inválido"),
+
+  cnpj: z
+    .string()
+    .regex(
+      /^\d{14}$/,
+      "CNPJ inválido"
+    ),
+})
+
+export type EnterpriseFormData = z.infer<typeof enterpriseSchema>
