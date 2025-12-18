@@ -12,6 +12,11 @@ const enterpriseService = {
         let response = await api.post('/enterprises/',enterprise)
         
         return response.data
+    },
+
+    delete: async(id: number): Promise<void> =>{
+        await api.delete(`/enterprises/${id}`)
+        return
     }
 }
 
