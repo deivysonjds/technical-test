@@ -1,9 +1,9 @@
-import { enterpriseResponse } from "@/types/enterprise"
+import { enterprise } from "@/types/enterprise"
 import { create } from "zustand"
 
 interface EnterpriseStore {
-  enterprises: enterpriseResponse[]
-  setAll: (enterprises: enterpriseResponse[]) => void
+  enterprises: enterprise[]
+  setAll: (enterprises: enterprise[]) => void
 }
 
 export const useEnterprisesStore = create<EnterpriseStore>((set) => ({
