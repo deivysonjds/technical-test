@@ -2,6 +2,7 @@ package com.br.technical_test.service;
 
 import com.br.technical_test.dto.request.EnterpriseRequest;
 import com.br.technical_test.dto.response.EnterpriseResponse;
+import com.br.technical_test.dto.response.EnterpriseSummaryResponse;
 import com.br.technical_test.entity.Enterprise;
 import com.br.technical_test.exception.NoSuchResource;
 import com.br.technical_test.mapper.EnterpriseMapper;
@@ -26,12 +27,13 @@ public class EnterpriseService {
     private EnterpriseMapper enterpriseMapper;
 
     @Transactional
-    public EnterpriseResponse insert(EnterpriseRequest enterpriseRequest){
+    public EnterpriseSummaryResponse insert(EnterpriseRequest enterpriseRequest){
         Enterprise enterprise = enterpriseMapper.toEntity(enterpriseRequest);
         if (!DocumentValidation.isCnpj(enterprise.getCnpj()) || !CepValidation.isCep(enterprise.getCep())) throw new IllegalArgumentException("Cnpj or Cep invalid");
 
         enterprise = enterpriseRepository.save(enterprise);
-        return enterpriseMapper.toResponse(enterprise);
+
+        return enterpriseMapper.toSummaryResponse(enterprise);
     }
 
     @Transactional(readOnly = true)
@@ -56,14 +58,14 @@ public class EnterpriseService {
     }
 
     @Transactional
-    public EnterpriseResponse updateById(Long id, EnterpriseRequest enterpriseRequest){
+    public EnterpriseSummaryResponse updateById(Long id, EnterpriseRequest enterpriseRequest){
         if (!enterpriseRepository.existsById(id)) throw new NoSuchResource("enterprise");
 
         Enterprise enterprise = enterpriseMapper.toEntity(enterpriseRequest);
         enterprise.setId(id);
         enterprise = enterpriseRepository.save(enterprise);
 
-        return enterpriseMapper.toResponse(enterprise);
+        return enterpriseMapper.toSummaryResponse(enterprise);
     }
 
     @Transactional

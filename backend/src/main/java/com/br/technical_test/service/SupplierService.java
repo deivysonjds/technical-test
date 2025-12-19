@@ -2,9 +2,7 @@ package com.br.technical_test.service;
 
 import com.br.technical_test.dto.request.SupplierPFRequest;
 import com.br.technical_test.dto.request.SupplierPJRequest;
-import com.br.technical_test.dto.response.SupplierPFResponse;
-import com.br.technical_test.dto.response.SupplierPJResponse;
-import com.br.technical_test.dto.response.SupplierResponse;
+import com.br.technical_test.dto.response.*;
 import com.br.technical_test.entity.Supplier;
 import com.br.technical_test.entity.SupplierPF;
 import com.br.technical_test.entity.SupplierPJ;
@@ -37,18 +35,18 @@ public class SupplierService {
     private SupplierMapper supplierMapper;
 
     @Transactional
-    public SupplierPJResponse insertPj(SupplierPJRequest supplierPjRequest){
+    public SupplierPJSummaryResponse insertPj(SupplierPJRequest supplierPjRequest){
         SupplierPJ supplier = supplierMapper.toPJEntity(supplierPjRequest);
         if (!DocumentValidation.isCnpj(supplier.getCnpj()) || !CepValidation.isCep(supplier.getCep())) throw new IllegalArgumentException("Cnpj or Cep invalid");
         supplier = supplierPjRepository.save(supplier);
-        return supplierMapper.toPJResponse(supplier);
+        return supplierMapper.toPJSummaryResponse(supplier);
     }
 
-    public SupplierPFResponse insertPf(SupplierPFRequest supplierPfRequest){
+    public SupplierPFSummaryResponse insertPf(SupplierPFRequest supplierPfRequest){
         SupplierPF supplier = supplierMapper.toPFEntity(supplierPfRequest);
         if (!DocumentValidation.isCpf(supplier.getCpf()) || !DocumentValidation.isRg(supplier.getRg())|| !CepValidation.isCep(supplier.getCep())) throw new IllegalArgumentException("Cnpj, Rg or Cep invalid");
         supplier = supplierPfRepository.save(supplier);
-        return supplierMapper.toPFResponse(supplier);
+        return supplierMapper.toPFSummaryResponse(supplier);
     }
 
     @Transactional(readOnly = true)
@@ -75,14 +73,14 @@ public class SupplierService {
     }
 
     @Transactional
-    public SupplierResponse updatePJById(Long id, SupplierPJRequest supplierPjRequest){
+    public SupplierSummaryResponse updatePJById(Long id, SupplierPJRequest supplierPjRequest){
         if (!supplierRepository.existsById(id)) throw new NoSuchResource("supplier");
 
         SupplierPJ supplier = supplierMapper.toPJEntity(supplierPjRequest);
         supplier.setId(id);
         supplier = supplierRepository.save(supplier);
 
-        return supplierMapper.toResponse(supplier);
+        return supplierMapper.toSummaryResponse(supplier);
     }
 
     @Transactional
