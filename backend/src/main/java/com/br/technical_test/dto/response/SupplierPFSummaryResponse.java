@@ -5,16 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupplierResponse {
-    private Long id;
-    private String name;
-    private String email;
-    private String cep;
-    private List<EnterpriseSummaryResponse> enterprises;
+public class SupplierPFSummaryResponse extends SupplierSummaryResponse{
+    private String cpf;
+    private String rg;
+    private LocalDate birthDate;
 }

@@ -7,14 +7,13 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
-public class EnterpriseResponse {
+@NoArgsConstructor
+public class SupplierSummaryResponse {
     private Long id;
     private String name;
+    private String email;
     private String cep;
-    private String cnpj;
-    private List<SupplierSummaryResponse> suppliers;
 }

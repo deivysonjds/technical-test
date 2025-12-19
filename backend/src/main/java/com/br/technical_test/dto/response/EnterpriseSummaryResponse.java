@@ -11,10 +11,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EnterpriseResponse {
+public class EnterpriseSummaryResponse {
     private Long id;
     private String name;
     private String cep;
     private String cnpj;
-    private List<SupplierSummaryResponse> suppliers;
 }

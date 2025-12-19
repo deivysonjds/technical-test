@@ -5,16 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
-public class EnterpriseResponse {
-    private Long id;
-    private String name;
-    private String cep;
+@NoArgsConstructor
+public class SupplierPJSummaryResponse extends SupplierSummaryResponse{
     private String cnpj;
-    private List<SupplierSummaryResponse> suppliers;
 }
