@@ -1,12 +1,22 @@
 import { z } from "zod"
+import { supplierPfSummary, supplierPjSummary } from "./supplier"
 
 
-export interface enterpriseResponse {
+export interface enterprise {
     id: number,
     cnpj: string,
     cep: string,
-    name: string
+    name: string,
+    suppliers: Array<supplierPfSummary | supplierPjSummary>
 }
+
+export interface enterpriseSummary {
+    id: number,
+    cnpj: string,
+    cep: string,
+    name: string,
+}
+
 export const enterpriseSchema = z.object({
   name: z
     .string()
