@@ -2,7 +2,10 @@ package com.br.technical_test.controller;
 
 import com.br.technical_test.dto.request.SupplierPFRequest;
 import com.br.technical_test.dto.request.SupplierPJRequest;
+import com.br.technical_test.dto.response.SupplierPFSummaryResponse;
+import com.br.technical_test.dto.response.SupplierPJSummaryResponse;
 import com.br.technical_test.dto.response.SupplierResponse;
+import com.br.technical_test.dto.response.SupplierSummaryResponse;
 import com.br.technical_test.exception.NoSuchResource;
 import com.br.technical_test.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +26,22 @@ public class SupplierControllers {
     private SupplierService supplierService;
 
     @PostMapping("/pf")
-    public ResponseEntity<SupplierResponse> insertPf(@RequestBody SupplierPFRequest supplierPfRequest){
+    public ResponseEntity<SupplierPFSummaryResponse> insertPf(@RequestBody SupplierPFRequest supplierPfRequest){
         try{
-            SupplierResponse supplierResponse = supplierService.insertPf(supplierPfRequest);
+            SupplierPFSummaryResponse supplierResponse = supplierService.insertPf(supplierPfRequest);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(supplierResponse.getId())
                     .toUri();
             return ResponseEntity.created(uri).body(supplierResponse);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PostMapping("/pj")
-    public ResponseEntity<SupplierResponse> insertPj(@RequestBody SupplierPJRequest supplierPjRequest){
+    public ResponseEntity<SupplierPJSummaryResponse> insertPj(@RequestBody SupplierPJRequest supplierPjRequest){
         try{
-            SupplierResponse supplierResponse = supplierService.insertPj(supplierPjRequest);
+            SupplierPJSummaryResponse supplierResponse = supplierService.insertPj(supplierPjRequest);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(supplierResponse.getId())
                     .toUri();
             return ResponseEntity.created(uri).body(supplierResponse);
@@ -91,9 +95,9 @@ public class SupplierControllers {
     }
 
     @PutMapping("/pj/{id}")
-    public ResponseEntity<SupplierResponse> updatePjById(@PathVariable Long id, @RequestBody SupplierPJRequest supplierPjRequest){
+    public ResponseEntity<SupplierSummaryResponse> updatePjById(@PathVariable Long id, @RequestBody SupplierPJRequest supplierPjRequest){
         try{
-            SupplierResponse enterpriseResponse = supplierService.updatePJById(id, supplierPjRequest);
+            SupplierSummaryResponse enterpriseResponse = supplierService.updatePJById(id, supplierPjRequest);
             return ResponseEntity.ok().body(enterpriseResponse);
         } catch (NoSuchResource e){
             return ResponseEntity.notFound().build();

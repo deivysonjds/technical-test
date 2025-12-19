@@ -2,6 +2,7 @@ package com.br.technical_test.controller;
 
 import com.br.technical_test.dto.request.EnterpriseRequest;
 import com.br.technical_test.dto.response.EnterpriseResponse;
+import com.br.technical_test.dto.response.EnterpriseSummaryResponse;
 import com.br.technical_test.exception.NoSuchResource;
 import com.br.technical_test.service.EnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,10 @@ public class EnterpriseControllers {
     private EnterpriseService enterpriseService;
 
     @PostMapping("/")
-    public ResponseEntity<EnterpriseResponse> insert(@RequestBody EnterpriseRequest enterpriseRequest){
+    public ResponseEntity<EnterpriseSummaryResponse> insert(@RequestBody EnterpriseRequest enterpriseRequest){
 
         try{
-            EnterpriseResponse enterpriseResponse = enterpriseService.insert(enterpriseRequest);
+            EnterpriseSummaryResponse enterpriseResponse = enterpriseService.insert(enterpriseRequest);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(enterpriseResponse.getId())
                     .toUri();
             return ResponseEntity.created(uri).body(enterpriseResponse);
@@ -68,9 +69,9 @@ public class EnterpriseControllers {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EnterpriseResponse> updateById(@PathVariable Long id, @RequestBody EnterpriseRequest enterpriseRequest){
+    public ResponseEntity<EnterpriseSummaryResponse> updateById(@PathVariable Long id, @RequestBody EnterpriseRequest enterpriseRequest){
         try{
-            EnterpriseResponse enterpriseResponse = enterpriseService.updateById(id, enterpriseRequest);
+            EnterpriseSummaryResponse enterpriseResponse = enterpriseService.updateById(id, enterpriseRequest);
             return ResponseEntity.ok().body(enterpriseResponse);
         } catch (NoSuchResource e){
             return ResponseEntity.notFound().build();
