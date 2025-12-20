@@ -69,9 +69,9 @@ public class EnterpriseControllers {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EnterpriseSummaryResponse> updateById(@PathVariable Long id, @RequestBody EnterpriseRequest enterpriseRequest){
+    public ResponseEntity<EnterpriseResponse> updateById(@PathVariable Long id, @RequestBody EnterpriseRequest enterpriseRequest){
         try{
-            EnterpriseSummaryResponse enterpriseResponse = enterpriseService.updateById(id, enterpriseRequest);
+            EnterpriseResponse enterpriseResponse = enterpriseService.updateById(id, enterpriseRequest);
             return ResponseEntity.ok().body(enterpriseResponse);
         } catch (NoSuchResource e){
             return ResponseEntity.notFound().build();

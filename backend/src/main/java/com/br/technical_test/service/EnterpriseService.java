@@ -43,7 +43,7 @@ public class EnterpriseService {
 
     @Transactional(readOnly = true)
     public EnterpriseResponse findById(Long id){
-        Optional<Enterprise> enterprise = enterpriseRepository.findById(id);
+        Optional<Enterprise> enterprise = enterpriseRepository.findByIdWithSuppliers(id);
         if (enterprise.isEmpty()) throw new NoSuchResource("enterprise");
 
         return enterpriseMapper.toResponse(enterprise.get());
@@ -58,14 +58,15 @@ public class EnterpriseService {
     }
 
     @Transactional
-    public EnterpriseSummaryResponse updateById(Long id, EnterpriseRequest enterpriseRequest){
-        if (!enterpriseRepository.existsById(id)) throw new NoSuchResource("enterprise");
+    public EnterpriseResponse updateById(Long id, EnterpriseRequest enterpriseRequest){
+        Enterprise enterprise = enterpriseRepository.findByIdWithSuppliers(id)
+                .orElseThrow(() -> new NoSuchResource("enterprise"));
 
-        Enterprise enterprise = enterpriseMapper.toEntity(enterpriseRequest);
-        enterprise.setId(id);
-        enterprise = enterpriseRepository.save(enterprise);
+        enterprise.setName(enterpriseRequest.getName());
+        enterprise.setCnpj(enterpriseRequest.getCnpj());
+        enterprise.setCep(enterpriseRequest.getCep());
 
-        return enterpriseMapper.toSummaryResponse(enterprise);
+        return enterpriseMapper.toResponse(enterprise);
     }
 
     @Transactional
