@@ -1,8 +1,12 @@
 package com.br.technical_test.dto.response;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class CepResponse {
     private String cep;
     private String logradouro;
