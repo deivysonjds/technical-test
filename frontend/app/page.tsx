@@ -5,17 +5,15 @@ import InsertEnterprise from "@/components/insertEnterprise"
 import LoadingPopUp from "@/components/loadinPopUp"
 import enterpriseService from "@/services/enterpriseService"
 import { useEnterprisesStore } from "@/store/enterpriseStore"
-import { EnterpriseFormData, enterprise, enterpriseSchema } from "@/types/enterprise"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { enterprise } from "@/types/enterprise"
 import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
 
 export default function Home() {
   const [isFormActive, setIsFormActive] = useState(false)
   const [isLoadind, setIsLoading] = useState(true)
   const [deletePopUp, setDeletePopUp] = useState(false)
   const [editPopUp, setEditPopUp] = useState(false)
-  const {selectedEnterprise,setSelectedEnterprise,enterprises, setAll } = useEnterprisesStore()
+  const {selectedEnterprise,setSelectedEnterprise,enterprises, setAllEnterprises } = useEnterprisesStore()
 
   function onEdit(enterprise: enterprise) {
     setEditPopUp(true)
@@ -30,7 +28,7 @@ export default function Home() {
   useEffect(() => {
     async function getAllAwait() {
       let enterprises = await enterpriseService.getAll()
-      setAll(enterprises.content)
+      setAllEnterprises(enterprises.content)
       setIsLoading(false)
     }
 
