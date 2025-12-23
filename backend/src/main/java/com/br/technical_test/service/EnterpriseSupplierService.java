@@ -2,7 +2,6 @@ package com.br.technical_test.service;
 
 import com.br.technical_test.dto.request.EnterpriseSupplierRequest;
 import com.br.technical_test.dto.response.EnterpriseSupplierResponse;
-import com.br.technical_test.dto.response.SupplierResponse;
 import com.br.technical_test.entity.Enterprise;
 import com.br.technical_test.entity.EnterpriseSupplier;
 import com.br.technical_test.entity.Supplier;
@@ -39,9 +38,8 @@ public class EnterpriseSupplierService {
         if (associationAlreadyExists) throw new IllegalArgumentException("Association already exists");
 
         EnterpriseSupplier enterpriseSupplier = toEntity(enterpriseSupplierRequest.getEnterpriseId(), enterpriseSupplierRequest.getSupplierId());
-        String uf = enterpriseSupplier.getEnterprise().getCep();
-
-        boolean isParana = CepValidation.isParana(cepService.findCep(uf));
+        String cep = enterpriseSupplier.getEnterprise().getCep();
+        boolean isParana = CepValidation.isParana(cepService.findCep(cep));
         boolean isPF = enterpriseSupplier.getSupplier() instanceof SupplierPF;
         if (isParana & isPF){
             Optional<SupplierPF> supplierPF = supplierPfRepository.findById(enterpriseSupplier.getSupplier().getId());
@@ -52,6 +50,14 @@ public class EnterpriseSupplierService {
 
 
         return toResponse(enterpriseSupplierRepository.save(enterpriseSupplier));
+    }
+
+    @Transactional
+    public void delete(EnterpriseSupplierRequest enterpriseSupplierRequest){
+
+        Optional<EnterpriseSupplier> enterpriseSupplier = enterpriseSupplierRepository.findBySupplierIdAndEnterpriseId(enterpriseSupplierRequest.getSupplierId(), enterpriseSupplierRequest.getEnterpriseId());
+        if (enterpriseSupplier.isEmpty()) throw new NoSuchResource("association");
+        enterpriseSupplierRepository.deleteById(enterpriseSupplier.get().getId());
     }
 
     private EnterpriseSupplier toEntity(Long enterpriseId, Long supplierId){

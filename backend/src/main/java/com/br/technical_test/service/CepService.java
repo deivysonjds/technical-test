@@ -14,7 +14,7 @@ public class CepService {
 
     public String findCep(String cep) {
         CepResponse response = webClient.get()
-                .uri("https://viacep.com.br/ws/{cep}/json/", cep)
+                .uri("https://viacep.com.br/ws/"+cep+"/json/")
                 .retrieve()
                 .bodyToMono(CepResponse.class)
                 .block(); // síncrono
