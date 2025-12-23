@@ -41,6 +41,7 @@ export interface supplierPjSummary {
 }
 
 export const supplierPfSchema = z.object({
+    type: z.literal("PF"),
     name: z
         .string()
         .min(1, "Nome é obrigatório"),
@@ -68,6 +69,7 @@ export const supplierPfSchema = z.object({
 })
 
 export const supplierPjSchema = z.object({
+    type: z.literal("PJ"),
     name: z
         .string()
         .min(1, "Nome é obrigatório"),
@@ -85,6 +87,12 @@ export const supplierPjSchema = z.object({
     email: z
         .email({ error: "E-mail inválido" }),
 })
+
+export const supplierSchema = z.discriminatedUnion("type", [
+  supplierPfSchema,
+  supplierPjSchema,
+])
+
 
 export type supplierPfFormData = z.infer<typeof supplierPfSchema>
 export type supplierPjFormData = z.infer<typeof supplierPjSchema>

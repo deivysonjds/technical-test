@@ -21,28 +21,32 @@ const supplierService = {
     },
 
     insertPf: async(supplierPf: supplierPfFormData): Promise<supplierPfSummary>=>{
-        let response = await api.post<supplierPfSummary>('/suppliers/pf',supplierPf)
+        const {type, ...payload}= supplierPf
+        let response = await api.post<supplierPfSummary>('/suppliers/pf',payload)
         
         return response.data
     },
     insertPj: async(supplierPj: supplierPjFormData): Promise<supplierPjSummary>=>{
-        let response = await api.post<supplierPjSummary>('/suppliers/pj',supplierPj)
+        const {type, ...payload}= supplierPj
+        let response = await api.post<supplierPjSummary>('/suppliers/pj',payload)
         
         return response.data
     },
-
+    
     delete: async(id: number): Promise<void> =>{
         await api.delete(`/suppliers/${id}`)
         return
     },
     updatePf: async(id: number, supplierPf: supplierPfFormData): Promise<supplierPf> =>{
-
-        let response = await api.put<supplierPf>(`/suppliers/pf/${id}`, supplierPf)
+        const {type, ...payload}= supplierPf
+        
+        let response = await api.put<supplierPf>(`/suppliers/pf/${id}`, payload)
         return response.data
     },
     updatePj: async(id: number, supplierPj: supplierPjFormData): Promise<supplierPj> =>{
-
-        let response = await api.put<supplierPj>(`/suppliers/pj/${id}`, supplierPj)
+        const {type, ...payload}= supplierPj
+        
+        let response = await api.put<supplierPj>(`/suppliers/pj/${id}`, payload)
         return response.data
     }
 }

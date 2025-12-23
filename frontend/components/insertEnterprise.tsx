@@ -10,7 +10,7 @@ interface props {
 
 export default function InsertEnterprise({setIsFormActive}: props) {
 
-    const { setAll } = useEnterprisesStore()
+    const { setAllEnterprises } = useEnterprisesStore()
 
     async function onSubmit(data: EnterpriseFormData) {
 
@@ -18,7 +18,7 @@ export default function InsertEnterprise({setIsFormActive}: props) {
         setIsFormActive(false)
 
         const enterprises = await enterpriseService.getAll()
-        setAll(enterprises.content)
+        setAllEnterprises(enterprises.content)
     }
 
     const {
