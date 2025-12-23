@@ -1,8 +1,12 @@
+import associationService from "@/services/associationService"
 import enterpriseService from "@/services/enterpriseService"
+import supplierService from "@/services/supplierService"
 import { useEnterprisesStore } from "@/store/enterpriseStore"
+import { useSuppliersStore } from "@/store/supplierStore"
 import { EnterpriseFormData, enterpriseSchema } from "@/types/enterprise"
+import { supplierPf, supplierPj } from "@/types/supplier"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
 interface props {
@@ -12,7 +16,9 @@ interface props {
 export default function EditEnterprise({ setEditPopUp }: props) {
     const [isChanged, setIsChanged] = useState(false)
     const [isAssociationActive, setIsAssociationActive] = useState(false)
-    const { selectedEnterprise, setAll, setSelectedEnterprise } = useEnterprisesStore()
+    const { selectedEnterprise, setSelectedEnterprise } = useEnterprisesStore()
+    const {setAllSuppliers, suppliers, } = useSuppliersStore()
+    const [suppliersFiltered, setSuppliersFiltered] = useState<Array<supplierPf | supplierPj>>([])
 
     const {
         register,
@@ -27,12 +33,50 @@ export default function EditEnterprise({ setEditPopUp }: props) {
         }
     })
 
+    async function onDeleteAssociation(supplierId: number){
+        try {
+            await associationService.delete({enterpriseId: selectedEnterprise?.id as number, supplierId: supplierId})
+
+        }catch (error: any){
+            alert("Erro de associação: " + error.response.data.message)
+        }
+        let responseEnterprise = await enterpriseService.findById(selectedEnterprise?.id as number)
+        setSelectedEnterprise(responseEnterprise)
+        let response = await supplierService.getAll()
+        setAllSuppliers(response.content)
+    }
+
+    async function onAddAssociation(supplierId: number){
+        try{
+            await associationService.associate({enterpriseId: selectedEnterprise?.id as number, supplierId: supplierId})
+        } catch (error: any){
+            alert("Erro de associação: " + error.response.data.message)
+        }
+
+        let responseEnterprise = await enterpriseService.findById(selectedEnterprise?.id as number)
+        setSelectedEnterprise(responseEnterprise)
+        let response = await supplierService.getAll()
+        setAllSuppliers(response.content)
+    }
+
     async function onEditSubmit(enterprise: EnterpriseFormData) {
         let response = await enterpriseService.update(selectedEnterprise?.id as number, enterprise)
         console.log(response);
 
         setSelectedEnterprise(response)
         onChanged()
+    }
+
+    function filterSuppliers(){
+        let idsSuppliers = new Set(
+            selectedEnterprise?.suppliers.map(supplier => supplier.id)
+        )
+
+        let suppliersAfterFilter: Array<supplierPf | supplierPj> = suppliers.filter(
+            supplier => !idsSuppliers.has(supplier.id)
+        )
+        
+        setSuppliersFiltered(suppliersAfterFilter)
     }
 
     function onChanged() {
@@ -43,6 +87,17 @@ export default function EditEnterprise({ setEditPopUp }: props) {
             setIsChanged(false)
         }, 3000)
     }
+
+    useEffect(()=>{
+        async function suppliersAwait(){
+            let response = await supplierService.getAll()
+            setAllSuppliers(response.content)
+            filterSuppliers()
+        }
+
+        suppliersAwait()
+        
+    },[isAssociationActive, selectedEnterprise])
     return (
         <div className="flex flex-col fixed inset-0 z-50 items-center justify-center bg-black/40 backdrop-blur-sm">
 
@@ -132,6 +187,7 @@ export default function EditEnterprise({ setEditPopUp }: props) {
                                     <th className="px-4 py-2 text-left">
                                         tipo
                                     </th>
+                                    <th className="px-4 py-2 text-left"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -144,6 +200,7 @@ export default function EditEnterprise({ setEditPopUp }: props) {
                                                 <td className="px-4 py-2">{supplier.email}</td>
                                                 <td className="px-4 py-2">{supplier.cep}</td>
                                                 <td className="px-4 py-2">{'cpf' in supplier ? 'PF' : 'PJ'}</td>
+                                                <td onClick={()=>onDeleteAssociation(supplier.id)} className="px-4 py-2"><img className="h-6 hover:cursor-pointer hover:scale-110" src="./delete.svg" alt="deletar" /></td>
                                             </tr>
                                         )))
                                         :
@@ -185,24 +242,26 @@ export default function EditEnterprise({ setEditPopUp }: props) {
                                     <th className="px-4 py-2 text-left">
                                         tipo
                                     </th>
+                                    <th className="px-4 py-2 text-left"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
-                                    selectedEnterprise && selectedEnterprise?.suppliers.length > 0 ?
-                                        (selectedEnterprise.suppliers.map((supplier, index) => (
+                                    suppliersFiltered.length > 0 ?
+                                        (suppliersFiltered.map((supplier, index) => (
                                             <tr className={index % 2 == 0 ? '' : 'bg-gray-100'} key={supplier.id}>
                                                 <td className="px-4 py-2">{supplier.name}</td>
                                                 <td className="px-4 py-2">{'cpf' in supplier ? supplier.cpf : supplier.cnpj}</td>
                                                 <td className="px-4 py-2">{supplier.email}</td>
                                                 <td className="px-4 py-2">{supplier.cep}</td>
                                                 <td className="px-4 py-2">{'cpf' in supplier ? 'PF' : 'PJ'}</td>
+                                                <td onClick={()=>onAddAssociation(supplier.id)} className="hover:cursor-pointer hover:scale-110"><img src="./add.png" alt="adicionar" /></td>
                                             </tr>
                                         )))
                                         :
                                         <tr>
                                             <td className="text-center" colSpan={5}>
-                                                Sem fonecedores cadastrados
+                                                Sem fonecedores para adicionar
                                             </td>
                                         </tr>
                                 }
