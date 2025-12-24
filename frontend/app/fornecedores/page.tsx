@@ -1,6 +1,6 @@
 "use client"
 import DeletePopUp from "@/components/deteletPopUp"
-import EditEnterprise from "@/components/editEnterprise"
+import EditSupplier from "@/components/editSupplier"
 import InsertSupplier from "@/components/insertSupplier"
 import LoadingPopUp from "@/components/loadinPopUp"
 import supplierService from "@/services/supplierService"
@@ -87,7 +87,7 @@ export default function Home() {
             </div>
 
             {isFormActive && <InsertSupplier setIsFormActive={setIsFormActive} />}
-            {editPopUp && <EditEnterprise setEditPopUp={setEditPopUp} />}
+            {editPopUp && <EditSupplier setEditPopUp={setEditPopUp} />}
             {deletePopUp && <DeletePopUp setDeletePopUp={setDeletePopUp} />}
             {isLoadind && <LoadingPopUp />}
         </main>

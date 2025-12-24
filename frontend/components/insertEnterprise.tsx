@@ -13,8 +13,11 @@ export default function InsertEnterprise({setIsFormActive}: props) {
     const { setAllEnterprises } = useEnterprisesStore()
 
     async function onSubmit(data: EnterpriseFormData) {
-
-        await enterpriseService.insert(data)
+        try {
+            await enterpriseService.insert(data)
+        } catch (error: any){
+            alert("Erro: "+ error.response.data.message)
+        }
         setIsFormActive(false)
 
         const enterprises = await enterpriseService.getAll()
