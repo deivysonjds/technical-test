@@ -67,8 +67,8 @@ public class SupplierControllers {
     }
 
     @PutMapping("/pj/{id}")
-    public ResponseEntity<SupplierSummaryResponse> updatePjById(@PathVariable Long id, @RequestBody SupplierPJRequest supplierPjRequest){
-        SupplierSummaryResponse enterpriseResponse = supplierService.updatePJById(id, supplierPjRequest);
+    public ResponseEntity<SupplierResponse> updatePjById(@PathVariable Long id, @RequestBody SupplierPJRequest supplierPjRequest){
+        SupplierResponse enterpriseResponse = supplierService.updatePJById(id, supplierPjRequest);
         return ResponseEntity.ok().body(enterpriseResponse);
     }
 }

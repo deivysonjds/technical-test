@@ -56,31 +56,37 @@ public class SupplierService {
 
     @Transactional(readOnly = true)
     public SupplierResponse findById(Long id){
-        Optional<Supplier> supplier = supplierRepository.findById(id);
+        Optional<Supplier> supplier = supplierRepository.findByIdWithEnterprises(id);
         if (supplier.isEmpty()) throw new NoSuchResource("supplier");
         return supplierMapper.toResponse(supplier.get());
     }
 
     @Transactional
     public SupplierResponse updatePFById(Long id, SupplierPFRequest supplierPfRequest){
-        if (!supplierRepository.existsById(id)) throw new NoSuchResource("supplier");
+        SupplierPF supplierPF = supplierPfRepository.findByIdWithEnterprises(id)
+                .orElseThrow(()-> new NoSuchResource("supplier"));
 
-        SupplierPF supplier = supplierMapper.toPFEntity(supplierPfRequest);
-        supplier.setId(id);
-        supplier = supplierRepository.save(supplier);
+        supplierPF.setRg(supplierPfRequest.getRg());
+        supplierPF.setCpf(supplierPfRequest.getCpf());
+        supplierPF.setBirthDate(supplierPfRequest.getBirthDate());
+        supplierPF.setEmail(supplierPfRequest.getEmail());
+        supplierPF.setCep(supplierPfRequest.getCep());
+        supplierPF.setName(supplierPfRequest.getName());
 
-        return supplierMapper.toResponse(supplier);
+        return supplierMapper.toResponse(supplierPF);
     }
 
     @Transactional
-    public SupplierSummaryResponse updatePJById(Long id, SupplierPJRequest supplierPjRequest){
-        if (!supplierRepository.existsById(id)) throw new NoSuchResource("supplier");
+    public SupplierResponse updatePJById(Long id, SupplierPJRequest supplierPjRequest){
+        SupplierPJ supplierPJ = supplierPjRepository.findByIdWithEnterprises(id)
+                .orElseThrow(()-> new NoSuchResource("supplier"));
 
-        SupplierPJ supplier = supplierMapper.toPJEntity(supplierPjRequest);
-        supplier.setId(id);
-        supplier = supplierRepository.save(supplier);
+        supplierPJ.setCnpj(supplierPjRequest.getCnpj());
+        supplierPJ.setEmail(supplierPjRequest.getEmail());
+        supplierPJ.setCep(supplierPjRequest.getCep());
+        supplierPJ.setName(supplierPjRequest.getName());
 
-        return supplierMapper.toSummaryResponse(supplier);
+        return supplierMapper.toResponse(supplierPJ);
     }
 
     @Transactional

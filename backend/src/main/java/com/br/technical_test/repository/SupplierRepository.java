@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Query("SELECT s FROM Supplier s " +
@@ -21,4 +23,11 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
             @Param("name") String name,
             @Param("document") String document,
             Pageable pageable);
+    @Query("SELECT s FROM Supplier s " +
+            "LEFT JOIN SupplierPF pf ON s.id = pf.id " +
+            "LEFT JOIN SupplierPJ pj ON s.id = pj.id " +
+            "LEFT JOIN FETCH s.enterprises " +
+            "WHERE s.id = :id"
+    )
+    Optional<Supplier> findByIdWithEnterprises(Long id);
 }
