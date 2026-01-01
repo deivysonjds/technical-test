@@ -35,9 +35,9 @@ O backend também faz consulta automática de CEP usando a API pública ViaCEP d
   
 # 🚀 Como rodar o projeto  
   
-## 1️⃣ Pré-requisitos
+## Pré-requisitos
 
-## Certifique-se de ter instalado:
+Certifique-se de ter instalado:
 
 - Docker
 - Docker Compose
