@@ -1,28 +1,28 @@
-import enterpriseService from "@/services/enterpriseService"
-import { useEnterprisesStore } from "@/store/enterpriseStore"
+import supplierService from "@/services/supplierService"
+import { useSuppliersStore } from "@/store/supplierStore"
 
 interface props {
     setDeletePopUp: (state: boolean) => void
 }
 
-export default function DeletePopUp({setDeletePopUp}: props){
-    const {selectedEnterprise, setAll} = useEnterprisesStore()
+export default function DeleteSpplierPopUp({setDeletePopUp}: props){
+    const {selectedSupplier, setAllSuppliers} = useSuppliersStore()
 
     async function confirDelete() {
-        await enterpriseService.delete(selectedEnterprise?.id as number)
+        await supplierService.delete(selectedSupplier?.id as number)
         setDeletePopUp(false)
     
-        const enterprises = await enterpriseService.getAll()
-        setAll(enterprises.content)
+        const enterprises = await supplierService.getAll()
+        setAllSuppliers(enterprises.content)
       }
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
         <div className="flex flex-col justify-start gap-4 bg-white rounded-xl p-6 shadow-xl">
-          <h2 className="font-bold">Deseja deletar a empresa abaixo?</h2>
-          <span>nome: {selectedEnterprise?.name}</span>
-          <span>cnpj: {selectedEnterprise?.cnpj}</span>
-          <span>cep: {selectedEnterprise?.cep}</span>
+          <h2 className="font-bold">Deseja deletar o fornecedor abaixo?</h2>
+          <span>nome: {selectedSupplier?.name}</span>
+          <span>{}</span>
+          <span>cep: {selectedSupplier?.cep}</span>
           <div className="flex gap-4 pt-2">
             <button
               type="button"
