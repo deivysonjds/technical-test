@@ -10,8 +10,16 @@ import {
 } from "@/types/supplier";
 
 const supplierService = {
-    getAll: async (): Promise<Page<supplierPf | supplierPj>>=>{
-        let response = await api.get<Page<supplierPf | supplierPj>>('/suppliers/')
+    getAll: async (
+        page = 0,
+        size = 20
+    ): Promise<Page<supplierPf | supplierPj>>=>{
+        let response = await api.get<Page<supplierPf | supplierPj>>('/suppliers/', {
+            params: {
+                page,
+                size
+            }
+        })
         return response.data
     },
     findById: async(id: number): Promise<supplierPf | supplierPj> => {

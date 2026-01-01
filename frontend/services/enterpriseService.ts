@@ -3,8 +3,16 @@ import api from "./api";
 import { Page } from "@/types/page";
 
 const enterpriseService = {
-    getAll: async (): Promise<Page<enterprise>>=>{
-        let response = await api.get<Page<enterprise>>('/enterprises/')
+    getAll: async (
+        page = 0,
+        size = 20
+    ): Promise<Page<enterprise>>=>{
+        let response = await api.get<Page<enterprise>>('/enterprises/', {
+            params: {
+                page,
+                size
+            }
+        })
         return response.data
     },
     findById: async(id: number): Promise<enterprise> => {
