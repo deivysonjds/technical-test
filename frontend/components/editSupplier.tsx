@@ -208,8 +208,10 @@ export default function EditSupplier({ setEditPopUp }: props) {
                         <h3 className="font-bold">
                             Empresas associadas
                         </h3>
+                        <div className="max-h-[500px] overflow-y-auto">
+
                         <table>
-                            <thead className="bg-green-100">
+                            <thead className="bg-green-100 sticky top-0 z-10 m-0">
                                 <tr>
                                     <th className="px-4 py-2 text-left">
                                         nome
@@ -243,6 +245,7 @@ export default function EditSupplier({ setEditPopUp }: props) {
                                 }
                             </tbody>
                         </table>
+                        </div>
                     </div>
                     {!isAssociationActive && <div className="flex h-full w-full justify-end items-end gap-4 pt-2">
                         <button
@@ -252,44 +255,47 @@ export default function EditSupplier({ setEditPopUp }: props) {
                     </div>}
                 </div>
                 {isAssociationActive && <div className="flex flex-col items-center gap-3 p-6">
-                    <h3 className="font-bold">
+                        <h3 className="font-bold">
                             Lista de Empresas
                         </h3>
-                        <table>
-                            <thead className="bg-green-100">
-                                <tr>
-                                    <th className="px-4 py-2 text-left">
-                                        nome
-                                    </th>
-                                    <th className="px-4 py-2 text-left">
-                                        cnpj
-                                    </th>
-                                    <th className="px-4 py-2 text-left">
-                                        cep
-                                    </th>
-                                    <th className="px-4 py-2 text-left"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    enterprisesFiltered.length > 0 ?
-                                        (enterprisesFiltered.map((supplier, index) => (
-                                            <tr className={index % 2 == 0 ? '' : 'bg-gray-100'} key={supplier.id}>
-                                                <td className="px-4 py-2">{supplier.name}</td>
-                                                <td className="px-4 py-2">{supplier.cnpj}</td>
-                                                <td className="px-4 py-2">{supplier.cep}</td>
-                                                <td onClick={()=>onAddAssociation(supplier.id)} className="hover:cursor-pointer hover:scale-110"><img src="./add.png" alt="adicionar" /></td>
+                        <div className="min-h-100 max-h-[300px] overflow-y-auto">
+
+                            <table>
+                                <thead className="bg-green-100 sticky top-0 z-10 m-0">
+                                    <tr>
+                                        <th className="px-4 py-2 text-left">
+                                            nome
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            cnpj
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            cep
+                                        </th>
+                                        <th className="px-4 py-2 text-left"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        enterprisesFiltered.length > 0 ?
+                                            (enterprisesFiltered.map((supplier, index) => (
+                                                <tr className={index % 2 == 0 ? '' : 'bg-gray-100'} key={supplier.id}>
+                                                    <td className="px-4 py-2">{supplier.name}</td>
+                                                    <td className="px-4 py-2">{supplier.cnpj}</td>
+                                                    <td className="px-4 py-2">{supplier.cep}</td>
+                                                    <td onClick={()=>onAddAssociation(supplier.id)} className="hover:cursor-pointer hover:scale-110"><img src="./add.png" alt="adicionar" /></td>
+                                                </tr>
+                                            )))
+                                            :
+                                            <tr>
+                                                <td className="text-center" colSpan={5}>
+                                                    Sem fonecedores para adicionar
+                                                </td>
                                             </tr>
-                                        )))
-                                        :
-                                        <tr>
-                                            <td className="text-center" colSpan={5}>
-                                                Sem fonecedores para adicionar
-                                            </td>
-                                        </tr>
-                                }
-                            </tbody>
-                        </table>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                         <div className="flex h-full w-full justify-end items-end gap-4 pt-2">
                         <button
                             onClick={()=>setIsAssociationActive(false)}
