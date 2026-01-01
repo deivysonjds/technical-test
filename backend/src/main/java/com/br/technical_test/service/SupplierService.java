@@ -23,6 +23,8 @@ import java.util.Optional;
 
 @Service
 public class SupplierService {
+    @Autowired
+    CepService cepService;
 
     @Autowired
     private SupplierRepository supplierRepository;
@@ -38,6 +40,7 @@ public class SupplierService {
     public SupplierPJSummaryResponse insertPj(SupplierPJRequest supplierPjRequest){
         SupplierPJ supplier = supplierMapper.toPJEntity(supplierPjRequest);
         if (!DocumentValidation.isCnpj(supplier.getCnpj()) || !CepValidation.isCep(supplier.getCep())) throw new IllegalArgumentException("Cnpj or Cep invalid");
+        cepService.findCep(supplier.getCep());
         supplier = supplierPjRepository.save(supplier);
         return supplierMapper.toPJSummaryResponse(supplier);
     }
@@ -45,6 +48,7 @@ public class SupplierService {
     public SupplierPFSummaryResponse insertPf(SupplierPFRequest supplierPfRequest){
         SupplierPF supplier = supplierMapper.toPFEntity(supplierPfRequest);
         if (!DocumentValidation.isCpf(supplier.getCpf()) || !DocumentValidation.isRg(supplier.getRg())|| !CepValidation.isCep(supplier.getCep())) throw new IllegalArgumentException("Cnpj, Rg or Cep invalid");
+        cepService.findCep(supplier.getCep());
         supplier = supplierPfRepository.save(supplier);
         return supplierMapper.toPFSummaryResponse(supplier);
     }
@@ -65,7 +69,7 @@ public class SupplierService {
     public SupplierResponse updatePFById(Long id, SupplierPFRequest supplierPfRequest){
         SupplierPF supplierPF = supplierPfRepository.findByIdWithEnterprises(id)
                 .orElseThrow(()-> new NoSuchResource("supplier"));
-
+        cepService.findCep(supplierPF.getCep());
         supplierPF.setRg(supplierPfRequest.getRg());
         supplierPF.setCpf(supplierPfRequest.getCpf());
         supplierPF.setBirthDate(supplierPfRequest.getBirthDate());
@@ -80,7 +84,7 @@ public class SupplierService {
     public SupplierResponse updatePJById(Long id, SupplierPJRequest supplierPjRequest){
         SupplierPJ supplierPJ = supplierPjRepository.findByIdWithEnterprises(id)
                 .orElseThrow(()-> new NoSuchResource("supplier"));
-
+        cepService.findCep(supplierPJ.getCep());
         supplierPJ.setCnpj(supplierPjRequest.getCnpj());
         supplierPJ.setEmail(supplierPjRequest.getEmail());
         supplierPJ.setCep(supplierPjRequest.getCep());

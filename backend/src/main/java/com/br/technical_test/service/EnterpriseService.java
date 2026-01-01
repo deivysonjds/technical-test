@@ -19,6 +19,8 @@ import java.util.Optional;
 
 @Service
 public class EnterpriseService {
+    @Autowired
+    CepService cepService;
 
     @Autowired
     private EnterpriseRepository enterpriseRepository;
@@ -30,7 +32,7 @@ public class EnterpriseService {
     public EnterpriseSummaryResponse insert(EnterpriseRequest enterpriseRequest){
         Enterprise enterprise = enterpriseMapper.toEntity(enterpriseRequest);
         if (!DocumentValidation.isCnpj(enterprise.getCnpj()) || !CepValidation.isCep(enterprise.getCep())) throw new IllegalArgumentException("Cnpj or Cep invalid");
-
+        cepService.findCep(enterprise.getCep());
         enterprise = enterpriseRepository.save(enterprise);
 
         return enterpriseMapper.toSummaryResponse(enterprise);
@@ -61,7 +63,7 @@ public class EnterpriseService {
     public EnterpriseResponse updateById(Long id, EnterpriseRequest enterpriseRequest){
         Enterprise enterprise = enterpriseRepository.findByIdWithSuppliers(id)
                 .orElseThrow(() -> new NoSuchResource("enterprise"));
-
+        cepService.findCep(enterprise.getCep());
         enterprise.setName(enterpriseRequest.getName());
         enterprise.setCnpj(enterpriseRequest.getCnpj());
         enterprise.setCep(enterpriseRequest.getCep());
