@@ -1,5 +1,5 @@
 "use client"
-import DeletePopUp from "@/components/deteletPopUp"
+import DeletePopUp from "@/components/deteletEnterprisePopUp"
 import EditSupplier from "@/components/editSupplier"
 import InsertSupplier from "@/components/insertSupplier"
 import LoadingPopUp from "@/components/loadinPopUp"
@@ -13,7 +13,7 @@ export default function Home() {
     const [isLoadind, setIsLoading] = useState(true)
     const [deletePopUp, setDeletePopUp] = useState(false)
     const [editPopUp, setEditPopUp] = useState(false)
-    const { selectedSupplier, setSelectedSupplier, suppliers, setAllSuppliers } = useSuppliersStore()
+    const {page, setPage, totalPages, setTotalPages,selectedSupplier, setSelectedSupplier, suppliers, setAllSuppliers } = useSuppliersStore()
 
     function onEdit(supplier: supplierPf | supplierPj) {
         setEditPopUp(true)
@@ -24,15 +24,25 @@ export default function Home() {
         setDeletePopUp(true)
         setSelectedSupplier(supplier)
     }
-
-    useEffect(() => {
-        async function getAllAwait() {
-            let suppliers = await supplierService.getAll()
+    
+    async function onNewDataPage(page: number){
+            setIsLoading(true)
+            let suppliers = await supplierService.getAll(page)
             setAllSuppliers(suppliers.content)
+            setPage(page)
+            setTotalPages(suppliers.totalPages)
             setIsLoading(false)
         }
+        
+        useEffect(() => {
+            async function getAllAwait() {
+                let suppliers = await supplierService.getAll()
+                setAllSuppliers(suppliers.content)
+                setIsLoading(false)
+                setTotalPages(suppliers.totalPages)
+            }
 
-        getAllAwait()
+            getAllAwait()
     }, [selectedSupplier])
 
     return (
@@ -85,6 +95,10 @@ export default function Home() {
 
 
             </div>
+            <div className="flex flex-row gap-10">
+				<button onClick={()=> onNewDataPage(page-1)} disabled={page==0} className="bg-gray-200 pe-5 pl-5 pt-2 pb-2 rounded-xl font-bold shadow hover:cursor-pointer hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">Anterior</button>
+				<button onClick={()=> onNewDataPage(page+1)} disabled={page+1 == totalPages} className="bg-gray-200 pe-5 pl-5 pt-2 pb-2 rounded-xl font-bold shadow hover:cursor-pointer hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">Próximo</button>
+			</div>
 
             {isFormActive && <InsertSupplier setIsFormActive={setIsFormActive} />}
             {editPopUp && <EditSupplier setEditPopUp={setEditPopUp} />}
